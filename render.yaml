@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: mood-food-recommender
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: FLASK_ENV
+        value: development
+      - key: PYTHON_VERSION
+        value: 3.11

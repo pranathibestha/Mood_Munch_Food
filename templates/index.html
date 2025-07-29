@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mood-Based Food Recommender</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: brown;
+        }
+
+        #bg-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            background: none;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            margin: 0;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 5px black;
+        }
+
+        .header p {
+            font-size: 20px;
+            margin-top: 10px;
+            text-shadow: 1px 1px 3px black;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            text-align: center;
+        }
+
+        .toggle-section {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .box {
+        background: brown;
+        color: white;
+        border: 2px solid #4b2e00;
+        padding: 20px;
+        border-radius: 12px;
+        width: 250px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .box:hover {
+        transform: scale(1.07);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+    }
+
+    .footer {
+        text-align: center;
+        padding: 30px;
+        color: white;
+        background-color: brown;
+        font-size: 18px;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px black;
+        margin-top: 50px;
+        transition: background-color 0.3s ease;
+    }
+
+        .dropdown-content {
+            margin-top: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 16px;
+            border-radius: 8px;
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.4);
+        }
+
+        select, button {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .carousel-container {
+            width: 100%;
+            overflow: hidden;
+            margin-top: 40px;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 30px;
+            animation: slideRightToLeft 20s linear infinite;
+            padding: 0 20px;
+        }
+
+        .carousel-track img {
+            height: 200px;
+            width: auto;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        @keyframes slideRightToLeft {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .feedback-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: rgb(226, 215, 201);
+            color: black;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: slideUp 0.8s ease forwards;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideUp {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .card:nth-child(1) { animation-delay: 0.2s; }
+        .card:nth-child(2) { animation-delay: 0.4s; }
+        .card:nth-child(3) { animation-delay: 0.6s; }
+
+        button[type="submit"] {
+            background-color: #aa7f39;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #8a5d2a;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Video -->
+    <video autoplay muted loop id="bg-video">
+        <source src="https://videos.pexels.com/video-files/5906572/5906572-hd_1920_1080_25fps.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="header">
+        <h1>MoodMunch: Food That Feels You</h1>
+        <p>FeelyFood: What's Your Flavor Today..</p>
+        <p>Select your mood to get the best food suggestions!</p>
+    </div>
+
+    <div class="content">
+        <form action="/recommend" method="POST">
+            <div class="inline-form-elements">
+                <label for="mood">Choose your mood:</label>
+                <select name="mood" id="mood">
+                    <option value="happy">Happy</option>
+                    <option value="sad">Sad</option>
+                    <option value="excited">Excited</option>
+                    <option value="tired">Tired</option>
+                </select>
+                <button type="submit">Get Recommendation</button>
+            </div>
+        </form>
+
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <img src="https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg" alt="Food1">
+                <img src="https://images.pexels.com/photos/2232/vegetables-italian-pizza-restaurant.jpg" alt="Food2">
+                <img src="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg" alt="Food3">
+                <img src="https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg" alt="Food4">
+                <img src="https://images.pexels.com/photos/2232/vegetables-italian-pizza-restaurant.jpg" alt="Food5">
+            </div>
+        </div>
+
+        <div class="feedback-row">
+            <div class="card">Feedback: This app is so helpful and intuitive! I love how it adapts to my feelings.</div>
+            <div class="card">Feedback: Loved the Chicken Tikka suggestion, it totally matched my mood!</div>
+            <div class="card">Feedback: Great UI and concept. The interface is clean and easy to use.</div>
+        </div>
+    </div>
+
+    <div class="footer" onclick="changeFooterColor(this)">
+        <p>&copy; 2025 Smart Recommender</p>
+    </div>
+
+    <script>
+        function changeFooterColor(elem) {
+            elem.style.backgroundColor = elem.style.backgroundColor === "black" ? "transparent" : "black";
+        }
+    </script>
+</body>
+</html>
+
+
+
